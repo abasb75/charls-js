@@ -1,4 +1,4 @@
-# charls-js
+# charls-js (only decoder)
 JS/WebAssembly build of [CharLS](https://github.com/team-charls/charls)
 
 <a href="https://chafey.github.io/charls-js/test/browser/index.html">demo</a>
@@ -8,19 +8,18 @@ JS/WebAssembly build of [CharLS](https://github.com/team-charls/charls)
 1. install From `npm`:
 
 ```bash
-npm i --save charls-js
+npm i --save @abasb75/charls-decoder
 ```
 
-2. import `charls-js`:
+2. import `@abasb75/charls-decoder`:
 
 ```js
-import CharLSWasm from 'charls-js'
+import CharLSW5asm from '@abasb75/charls-decoder'
 
 ...
 let decoder,encoder;
 CharLSWasm().then(function(charlsjs) {
     decoder = new charlsjs.JpegLSDecoder();
-    encoder = new charlsjs.JpegLSEncoder();
 });
 ...
 
@@ -30,7 +29,7 @@ CharLSWasm().then(function(charlsjs) {
 
 ```javascript
 
-import {decode} from "charls-js";
+import {decode} from "@abasb75/charls-decoder";
 
 const decoded = await decode(arrayBuffer); // ArrayBuffer
 console.log('decoded',decoded);
