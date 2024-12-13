@@ -1,10 +1,11 @@
+
 <!DOCTYPE HTML>
 
 <html>
 <head>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">   
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript" src="../../dist/charlsjs.js"></script>
+    <script type="text/javascript" src="dist/charlsjs.js"></script>
 </head>
 <body>
 <div class="container">
@@ -15,19 +16,19 @@
       </p>
       <div>
       <select id="imageSelector">
-        <option value="../../test/fixtures/jls/CT1.JLS" selected>CT1</option>
-        <option value="../../test/fixtures/jls/CT2.JLS">CT2</option>
-        <option value="../../test/fixtures/jls/MG1.JLS">MG1</option>
-        <option value="../../test/fixtures/jls/MR1.JLS">MR1</option>
-        <option value="../../test/fixtures/jls/MR2.JLS">MR2</option>
-        <option value="../../test/fixtures/jls/MR3.JLS">MR3</option>
-        <option value="../../test/fixtures/jls/MR4.JLS">MR4</option>
-        <option value="../../test/fixtures/jls/NM1.JLS">NM1</option>
-        <option value="../../test/fixtures/jls/RG1.JLS">RG1</option>
-        <option value="../../test/fixtures/jls/RG2.JLS">RG2</option>
-        <option value="../../test/fixtures/jls/RG3.JLS">RG3</option>
-        <option value="../../test/fixtures/jls/SC1.JLS">SC1</option>
-        <option value="../../test/fixtures/jls/XA1.JLS">XA1</option>
+        <option value="fixtures/jls/CT1.JLS" selected>CT1</option>
+        <option value="fixtures/jls/CT2.JLS">CT2</option>
+        <option value="fixtures/jls/MG1.JLS">MG1</option>
+        <option value="fixtures/jls/MR1.JLS">MR1</option>
+        <option value="fixtures/jls/MR2.JLS">MR2</option>
+        <option value="fixtures/jls/MR3.JLS">MR3</option>
+        <option value="fixtures/jls/MR4.JLS">MR4</option>
+        <option value="fixtures/jls/NM1.JLS">NM1</option>
+        <option value="fixtures/jls/RG1.JLS">RG1</option>
+        <option value="fixtures/jls/RG2.JLS">RG2</option>
+        <option value="fixtures/jls/RG3.JLS">RG3</option>
+        <option value="fixtures/jls/SC1.JLS">SC1</option>
+        <option value="fixtures/jls/XA1.JLS">XA1</option>
 
       </select>
       <button id="benchmark">Benchmark</button>
@@ -326,8 +327,8 @@
   }
 
   function load(url) {
-    if(url === '../../test/fixtures/jls/CT1.JLS' ||
-      url === '../../test/fixtures/jls/CT2.JLS') {
+    if(url === 'fixtures/jls/CT1.JLS' ||
+      url === 'fixtures/jls/CT2.JLS') {
         $('#signed').prop('checked', true);
       } else {
         $('#signed').prop('checked', false);
@@ -369,13 +370,13 @@
     $('#nearLossless').text('');
   }
 
-  Module.onRuntimeInitialized = async _ => {
-    $("#version").text(Module.getVersion())
-    decoder = new Module.JpegLSDecoder();
-    encoder = new Module.JpegLSEncoder();
+  CharLSWasm().then(async (charls)=> {
+    $("#version").text(charls.getVersion())
+    decoder = new charls.JpegLSDecoder();
+    encoder = new charls.JpegLSEncoder();
     
-    load('../../test/fixtures/jls/CT1.JLS');
-    //load('../../test/fixtures/artificial-line.jls');
+    load('fixtures/jls/CT1.JLS');
+    //load('fixtures/artificial-line.jls');
 
     $('#imageSelector').change(function(e) {
       reset();
@@ -464,6 +465,6 @@
       window.open(url);
       window.URL.revokeObjectURL(url);
     });
-  }
+  });
 </script>
 </html>

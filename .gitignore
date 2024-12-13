@@ -1,4 +1,5 @@
 test/fixtures/MG1.JLS
 test/fixtures/artificial*
 build/*
+build/
 build-native/*
