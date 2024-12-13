@@ -11,7 +11,10 @@ Install this in your JavaScript project using npm:
 
 ```bash
 # NOTE - this is not published yet so won't work yet...
-#npm install --save-dev charls-js 
+npm install @abasb75/charls
+
+# or
+npm install @abasb75/charls-decoder
 ```
 
 ## Usage
