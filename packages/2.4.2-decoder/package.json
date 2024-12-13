@@ -1,0 +1,23 @@
+{
+    "name": "charls-decoder",
+    "version": "2.4.2",
+    "description": "charls decoder for js",
+    "main": "index.js",
+    "types": "interface.d.ts",
+    "directories": {
+      "test": "test"
+    },
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/abasb75/charls-js/raction.git"
+    },
+    "bugs": {
+        "url": "https://github.com/abasb75/charls-js/issues"
+    },
+    "homepage": "https://github.com/abasb75/charls-js#readme"
+  }
+  

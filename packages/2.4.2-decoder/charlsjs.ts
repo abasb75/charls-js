@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 var CharLSWasm = (() => {
   var _scriptName = typeof document != 'undefined' ? document.currentScript?.src : undefined;
@@ -17,3 +18,5 @@ if (typeof exports === 'object' && typeof module === 'object')
   module.exports = CharLSWasm;
 else if (typeof define === 'function' && define['amd'])
   define([], () => CharLSWasm);
+
+export default CharLSWasm;
