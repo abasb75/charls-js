@@ -22,10 +22,11 @@ npm install @abasb75/charls-decoder
 Before using this library, you must wait for it to be initialized:
 
 ``` javascript
-const charls = require('charlsjs')
-charls.onRuntimeInitialized = async _ => {
-    // Now you can use it
-}
+let decoder,encoder;
+CharLSWasm().then(function(charlsjs) {
+    decoder = new charlsjs.JpegLSDecoder();
+    encoder = new charlsjs.JpegLSEncoder();
+});
 ```
 
 To decode a JPEG-LS image, create a decoder instance, copy the JPEG-LS bitstream
