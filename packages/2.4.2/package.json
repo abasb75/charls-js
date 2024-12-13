@@ -1,5 +1,5 @@
 {
-    "name": "charls-js",
+    "name": "@abasb75/charls",
     "version": "2.4.2",
     "description": "charls for js",
     "main": "index.js",
@@ -13,7 +13,7 @@
     "author": "",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/abasb75/charls-js/raction.git"
+        "url": "https://github.com/abasb75/charls-js/raction.git"
     },
     "bugs": {
         "url": "https://github.com/abasb75/charls-js/issues"
