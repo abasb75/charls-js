@@ -17,6 +17,7 @@ encode_file <input.raw> <output.jls> <width> <height> <components> <bits> <inter
 
 // gray scale
 ./encode_file ./test-files/pixel.raw ./test-files/pixel.jls  512 512 1 16 0 0
+
 ./decode_file ./test-files/pixel.jls
 
 ./encode_file ./test-files/pixel2.raw ./test-files/pixel2.jls  256 256 3 8 1 0
@@ -29,4 +30,5 @@ encode_file <input.raw> <output.jls> <width> <height> <components> <bits> <inter
 ./decode_file ./test-files/pixel4.jls
 
 ./encode_file ./test-files/decoded.raw ./test-files/encoded.jls 128 128 1 7 0 0
+
 
