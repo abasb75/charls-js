@@ -1,29 +1,42 @@
 {
-  "name": "charls",
-  "version": "1.0.0",
-  "description": "WASM Build of CharLS",
-  "main": "dist/charlsjs.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/chafey/charls-js.git"
-  },
-  "keywords": [
-    "JPEG",
-    "JPEGLS",
-    "CharLS",
-    "JPEG-LS",
-    "DICOM"
-  ],
-  "author": "Chris Hafey <chafey@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/chafey/charls-js/issues"
-  },
-  "homepage": "https://github.com/chafey/charls-js#readme"
+    "name": "@abasb75/charls",
+    "version": "2.4.2-p8",
+    "description": "charls for js",
+    "directories": {
+        "test": "test"
+    },
+    "type": "module",
+    "exports": {
+        "./encode": "./dist/jls_es6_encoder.js",
+        "./decode": "./dist/jls_es6_decoder.js",
+        "./*": "./dist/*"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "dev": "concurrently \"npx tailwindcss -i ./styles/index.css -o ./styles/style.css --watch\" \"npx live-server --port=8000 ./\""
+    },
+    "author": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/abasb75/charls-js/raction.git"
+    },
+    "bugs": {
+        "url": "https://github.com/abasb75/charls-js/issues"
+    },
+    "homepage": "https://github.com/abasb75/charls-js#readme",
+    "devDependencies": {
+        "@tailwindcss/cli": "^4.1.18",
+        "autoprefixer": "^10.4.22",
+        "concurrently": "^9.2.1",
+        "esbuild-copy-files": "^0.2.16",
+        "fs": "^0.0.1-security",
+        "live-server": "^1.2.2",
+        "path": "^0.12.7",
+        "postcss": "^8.5.6",
+        "tailwindcss": "4.1",
+        "tsup": "^8.5.1",
+        "typescript": "^5.9.3"
+    }
 }

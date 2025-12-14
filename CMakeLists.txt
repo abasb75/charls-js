@@ -1,23 +1,188 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
+project(jls_wasm_decoder LANGUAGES CXX)
 
-project (charlsjs
-  LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# set the build type if not specified
-set(default_build_type "Release")
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
-  set(CMAKE_BUILD_TYPE "${default_build_type}")
-endif()
+add_subdirectory(external/charls)
 
-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/charls/CMakeLists.txt")
-    message(FATAL_ERROR "dependency charls is not present, please run: git submodule update --init --recursive")
-endif()
+# jls_decoder
+add_executable(jls_decoder src/jsdecode.cpp src/codec/decode.cpp)
+target_compile_features(jls_decoder PUBLIC cxx_std_17)
 
-# add the external library
-add_subdirectory(charls EXCLUDE_FROM_ALL)
 
-# add the js wrapper
-if(EMSCRIPTEN)
-  add_subdirectory(src)
-endif()
+target_link_libraries(jls_decoder PRIVATE charls)
+
+set_target_properties(
+    jls_decoder 
+    PROPERTIES 
+    LINK_FLAGS "\
+      --allowJs \
+      --emit-tsd interface.d.ts \
+      --bind \
+      -s NO_EXIT_RUNTIME=1 \
+      -s DISABLE_EXCEPTION_CATCHING=1 \
+      -s MALLOC=emmalloc \
+      -s ALLOW_MEMORY_GROWTH=1 \
+      -s ASSERTIONS=0 \
+      -s FILESYSTEM=0 \
+      -s EXPORTED_FUNCTIONS=[] \
+      -s EXPORTED_RUNTIME_METHODS=[ccall] \
+      -s SINGLE_FILE=0 \
+      -s MODULARIZE=1 \
+      -s EXPORT_ES6=0 \
+      -s ENVIRONMENT=web \
+      -s EXPORT_NAME=CharLSDecoder \
+   ")
+
+
+# jls_decoder with export default
+add_executable(jls_es6_decoder src/jsdecode.cpp src/codec/decode.cpp)
+target_compile_features(jls_es6_decoder PUBLIC cxx_std_17)
+
+
+target_link_libraries(jls_es6_decoder PRIVATE charls)
+
+set_target_properties(
+    jls_es6_decoder 
+    PROPERTIES 
+    LINK_FLAGS "\
+      --allowJs \
+      --emit-tsd interface.d.ts \
+      --bind \
+      -s NO_EXIT_RUNTIME=1 \
+      -s DISABLE_EXCEPTION_CATCHING=1 \
+      -s MALLOC=emmalloc \
+      -s ALLOW_MEMORY_GROWTH=1 \
+      -s ASSERTIONS=0 \
+      -s FILESYSTEM=0 \
+      -s EXPORTED_FUNCTIONS=[] \
+      -s EXPORTED_RUNTIME_METHODS=[ccall] \
+      -s SINGLE_FILE=0 \
+      -s MODULARIZE=1 \
+      -s EXPORT_ES6=1 \
+      -s ENVIRONMENT=web \
+      -s EXPORT_NAME=CharLSDecoder \
+   ")
+
+# jls_decoder with export default & inline wasm base 64
+add_executable(jls_inline_decoder src/jsdecode.cpp src/codec/decode.cpp)
+target_compile_features(jls_inline_decoder PUBLIC cxx_std_17)
+
+
+target_link_libraries(jls_inline_decoder PRIVATE charls)
+
+set_target_properties(
+    jls_inline_decoder 
+    PROPERTIES 
+    LINK_FLAGS "\
+      --allowJs \
+      --emit-tsd interface.d.ts \
+      --bind \
+      -s NO_EXIT_RUNTIME=1 \
+      -s DISABLE_EXCEPTION_CATCHING=1 \
+      -s MALLOC=emmalloc \
+      -s ALLOW_MEMORY_GROWTH=1 \
+      -s ASSERTIONS=0 \
+      -s FILESYSTEM=0 \
+      -s EXPORTED_FUNCTIONS=[] \
+      -s EXPORTED_RUNTIME_METHODS=[ccall] \
+      -s SINGLE_FILE=1 \
+      -s MODULARIZE=1 \
+      -s EXPORT_ES6=1 \
+      -s ENVIRONMENT=web \
+      -s EXPORT_NAME=CharLSDecoder \
+   ")
+
+
+
+# ecoder
+add_executable(jls_encoder src/jsencode.cpp src/codec/encode.cpp)
+target_compile_features(jls_encoder PUBLIC cxx_std_17)
+
+
+target_link_libraries(jls_encoder PRIVATE charls)
+
+set_target_properties(
+    jls_encoder 
+    PROPERTIES 
+    LINK_FLAGS "\
+      --allowJs \
+      --emit-tsd interface.d.ts \
+      --bind \
+      -s NO_EXIT_RUNTIME=1 \
+      -s DISABLE_EXCEPTION_CATCHING=1 \
+      -s MALLOC=emmalloc \
+      -s ALLOW_MEMORY_GROWTH=1 \
+      -s ASSERTIONS=0 \
+      -s FILESYSTEM=0 \
+      -s EXPORTED_FUNCTIONS=[] \
+      -s EXPORTED_RUNTIME_METHODS=[ccall] \
+      -s SINGLE_FILE=0 \
+      -s MODULARIZE=1 \
+      -s EXPORT_ES6=0 \
+      -s ENVIRONMENT=web \
+      -s EXPORT_NAME=CharLSEncoder \
+   ")
+
+
+
+# ecoder with export default
+add_executable(jls_es6_encoder src/jsencode.cpp src/codec/encode.cpp)
+target_compile_features(jls_es6_encoder PUBLIC cxx_std_17)
+
+
+target_link_libraries(jls_es6_encoder PRIVATE charls)
+
+set_target_properties(
+    jls_es6_encoder 
+    PROPERTIES 
+    LINK_FLAGS "\
+      --allowJs \
+      --emit-tsd interface.d.ts \
+      --bind \
+      -s NO_EXIT_RUNTIME=1 \
+      -s DISABLE_EXCEPTION_CATCHING=1 \
+      -s MALLOC=emmalloc \
+      -s ALLOW_MEMORY_GROWTH=1 \
+      -s ASSERTIONS=0 \
+      -s FILESYSTEM=0 \
+      -s EXPORTED_FUNCTIONS=[] \
+      -s EXPORTED_RUNTIME_METHODS=[ccall] \
+      -s SINGLE_FILE=0 \
+      -s MODULARIZE=1 \
+      -s EXPORT_ES6=1 \
+      -s ENVIRONMENT=web \
+      -s EXPORT_NAME=CharLSEncoder \
+   ")
+
+
+# ecoder with export default & inline file
+add_executable(jls_inline_encoder src/jsencode.cpp src/codec/encode.cpp)
+target_compile_features(jls_inline_encoder PUBLIC cxx_std_17)
+
+
+target_link_libraries(jls_inline_encoder PRIVATE charls)
+
+set_target_properties(
+    jls_inline_encoder 
+    PROPERTIES 
+    LINK_FLAGS "\
+      --allowJs \
+      --emit-tsd interface.d.ts \
+      --bind \
+      -s NO_EXIT_RUNTIME=1 \
+      -s DISABLE_EXCEPTION_CATCHING=1 \
+      -s MALLOC=emmalloc \
+      -s ALLOW_MEMORY_GROWTH=1 \
+      -s ASSERTIONS=0 \
+      -s FILESYSTEM=0 \
+      -s EXPORTED_FUNCTIONS=[] \
+      -s EXPORTED_RUNTIME_METHODS=[ccall] \
+      -s SINGLE_FILE=1 \
+      -s MODULARIZE=1 \
+      -s EXPORT_ES6=1 \
+      -s ENVIRONMENT=web \
+      -s EXPORT_NAME=CharLSEncoder \
+   ")
+

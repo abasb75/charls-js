@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Professional JPEG-LS converter. Convert JLS to PNG/JPEG or compress images to JLS with WebAssembly." />
+  <title>JLS Converter — Lossless Compression Tool</title>
+  <link href="./styles/style.css" rel="stylesheet"/>
+  <style>
+    body { background: #000; color: #fff; min-height: 100vh; }
+
+    .spinner {
+      width: 80px;
+      height: 80px;
+      border: 8px solid #1e293b;
+      border-top: 8px solid #9333ea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="w-full h-screen bg-slate-950 overflow-hidden flex flex-col">
+    <div id="viewer" class="p-3 h-full h-[calc(100%_-_4.5rem)] overflow-hidden">
+      <div class="w-full h-full bg-black rounded-md overflow-hidden relative">
+
+        <div id="welcome" class="px-4 flex flex-col w-full h-full justify-center items-center ">
+          <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
+            JLS Converter
+          </h1>
+          <p class="text-2xl text-center text-gray-400 mb-12 max-w-2xl">
+            Professional lossless image compression<br>
+            Convert JLS ↔ PNG / JPEG with full 8-bit & 16-bit support
+          </p>
+
+          <div id="dropZone" class="border-4 border-dashed border-gray-600 rounded-3xl p-20 text-center max-w-3xl w-full cursor-pointer transition hover:border-purple-500 hover:bg-purple-900/20">
+            <svg class="mx-auto h-24 w-24 text-gray-500 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5.5 5.5 0 1117.5 6h.5a5 5 0 015 5.5M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <p class="text-2xl font-medium">Drop your file here</p>
+            <p class="text-gray-400 mt-4">or click to browse (.jls, .jpg, .jpeg, .png)</p>
+          </div>
+          <input type="file" id="fileInput" class="hidden" accept=".jls,.jpg,.jpeg,.png" />
+        </div>
+
+        <div id="processing" class="hidden text-center w-full h-full flex flex-col justify-center items-center">
+          <div class="spinner"></div>
+          <p class="text-3xl mt-12 text-gray-300">Processing...</p>
+        </div>
+ 
+        <div id="result" class="relative bg-purple-900 hidden w-full h-full">
+          <div id="canvasContainer" class="bg-black w-full h-full flex items-center justify-center">
+            <canvas id="previewCanvas"></canvas>
+          </div>
+
+          <p id="infoText" class="absolute text-center text-sm top-0 left-0 w-full h-full bg-black/20 text-slate-50"></p>
+
+
+          <div class="overlay-buttons w-full absolute bottom-0 left-0 h-16 py-3 bg-black/0.5 w-full flex gap-4 justify-center ">
+            <!-- Download JLS -->
+            <a id="downloadJls"
+              class="flex items-center gap-2 px-5 py-0 rounded bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-md cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"/>
+              </svg>
+              Download JLS
+            </a>
+
+            <!-- Download PNG -->
+            <a id="downloadPng"
+              class="flex items-center gap-2 px-5 py-0 rounded bg-emerald-600 text-white hover:bg-emerald-700  transition shadow-md cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 5h18v14H3z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 13l2-2 4 4 3-3"/>
+              </svg>
+              Download PNG
+            </a>
+
+            <!-- Download JPG -->
+            <a id="downloadJpg"
+              class="flex items-center gap-2 px-5 py-0 rounded bg-amber-500 text-white hover:bg-amber-600 transition shadow-md cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6h16v12H4z"/>
+                <circle cx="9" cy="10" r="1.5" fill="currentColor"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16l5-5 4 4 3-3 4 4"/>
+              </svg>
+              Download JPEG
+            </a>
+
+            <!-- Another File -->
+            <button id="anotherFile"
+              class="flex items-center gap-2 px-5 py-0 rounded bg-slate-100 text-gray-900 hover:bg-slate-200 transition shadow-md cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v12m6-6H6"/>
+              </svg>
+              Select Another File
+            </button>
+          </div>
+
+
+          <div id="errorMsg" class="hidden text-red-400 text-2xl mt-12"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="py-1 px-4 md:px-12">
+      <p class="flex items-center justify-center h-16 border-t border-t-purple-400">
+        <span>
+          Support: <a href="mailto:abasbagheria@gmail.com" class="text-purple-400 hover:underline">abasbagheria@gmail.com</a>
+        </span>
+      </p>
+    </footer>
+  </div>
+
+  <script src="./dist/jls_decoder.js"></script>
+  <script src="./dist/jls_encoder.js"></script>
+  <script type="module">
+    let decode = null;
+    let encode = null;
+
+    async function init() {
+      const decoderModule = await CharLSDecoder();
+      const encoderModule = await CharLSEncoder();
+      decode = decoderModule.decode;
+      encode = encoderModule.encode;
+    }
+
+    function detectFileType(uint8Array) {
+      if (uint8Array.length < 12) return null;
+      if (uint8Array[0] === 0xFF && uint8Array[1] === 0xD8 && uint8Array[2] === 0xFF) {
+        for (let i = 2; i < uint8Array.length - 1; i++) {
+          if (uint8Array[i] === 0xFF && (uint8Array[i+1] >= 0xF7 && uint8Array[i+1] <= 0xF9)) return "jls";
+        }
+        return "jpg";
+      }
+      if (uint8Array[0] === 0x89 && uint8Array[1] === 0x50 && uint8Array[2] === 0x4E && uint8Array[3] === 0x47 &&
+          uint8Array[4] === 0x0D && uint8Array[5] === 0x0A && uint8Array[6] === 0x1A && uint8Array[7] === 0x0A) {
+        return "png";
+      }
+      return null;
+    }
+
+    function drawCanvas(data, width, height, components, bits) {
+      const canvas = document.getElementById("previewCanvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      const imgData = ctx.createImageData(width, height);
+
+      if (components === 1) {
+        const bytesPerPixel = bits / 8;
+        for (let i = 0, j = 0; i < data.length; i += bytesPerPixel, j += 4) {
+          let pixel = data[i];
+          if (bits === 16) pixel = data[i] | (data[i + 1] << 8);
+          const val = Math.round(pixel / (Math.pow(2, bits) - 1) * 255);
+          imgData.data[j] = val;
+          imgData.data[j + 1] = val;
+          imgData.data[j + 2] = val;
+          imgData.data[j + 3] = 255;
+        }
+      } else {
+        let ptr = 0;
+        for (let i = 0; i < data.length; i += 3) {
+          imgData.data[ptr++] = data[i];
+          imgData.data[ptr++] = data[i + 1];
+          imgData.data[ptr++] = data[i + 2];
+          imgData.data[ptr++] = 255;
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    function resetToWelcome() {
+      document.getElementById("welcome").classList.remove("hidden");
+      document.getElementById("processing").classList.add("hidden");
+      document.getElementById("result").classList.add("hidden");
+      document.getElementById("errorMsg").classList.add("hidden");
+      document.getElementById("errorMsg").textContent = "";
+      document.getElementById("infoText").textContent = "";
+      document.getElementById("downloadJls").classList.add("hidden");
+    }
+
+    async function processFile(file) {
+      resetToWelcome();
+      document.getElementById("welcome").classList.add("hidden");
+      document.getElementById("processing").classList.remove("hidden");
+
+      const arrayBuffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      const type = detectFileType(bytes);
+
+      if (!type) {
+        document.getElementById("processing").classList.add("hidden");
+        document.getElementById("errorMsg").textContent = "Unsupported file format";
+        document.getElementById("errorMsg").classList.remove("hidden");
+        return;
+      }
+
+      try {
+        let rawData, width, height, components = 3, bits = 8;
+        let jlsBytes = null;
+
+        if (type === "jls") {
+          const result = decode(bytes);
+          rawData = result.data;
+          width = result.width;
+          height = result.height;
+          components = result.components;
+          bits = result.bits_per_sample;
+
+          document.getElementById("infoText").textContent = `${width}×${height} • ${components === 1 ? 'Grayscale' : 'RGB'} • ${bits}-bit`;
+
+          const canvas = document.getElementById("previewCanvas");
+          document.getElementById("downloadPng").href = canvas.toDataURL("image/png");
+          document.getElementById("downloadPng").download = "decoded.png";
+          document.getElementById("downloadJpg").href = canvas.toDataURL("image/jpeg", 0.95);
+          document.getElementById("downloadJpg").download = "decoded.jpg";
+          document.getElementById("downloadJls").classList.add("hidden");
+
+        } else {
+          const img = new Image();
+          const loadPromise = new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+          });
+          img.src = URL.createObjectURL(file);
+          await loadPromise;
+
+          const tempCanvas = document.createElement("canvas");
+          tempCanvas.width = img.width;
+          tempCanvas.height = img.height;
+          const ctx = tempCanvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, img.width, img.height);
+          const dataWithAlpha = imageData.data;
+
+          rawData = new Uint8Array(img.width * img.height * 3);
+          let ptr = 0;
+          for (let i = 0; i < dataWithAlpha.length; i += 4) {
+            rawData[ptr++] = dataWithAlpha[i];
+            rawData[ptr++] = dataWithAlpha[i + 1];
+            rawData[ptr++] = dataWithAlpha[i + 2];
+          }
+
+          width = img.width;
+          height = img.height;
+
+          const jlsResult = encode(rawData, width, height, 3, 8, -1, 0);
+          if (!jlsResult || !jlsResult.data) throw new Error("Encoding failed");
+          jlsBytes = jlsResult.data;
+
+          document.getElementById("infoText").innerHTML = `
+            Original: <strong>${bytes.length.toLocaleString()} bytes</strong> → 
+            JLS: <strong>${jlsBytes.length.toLocaleString()} bytes</strong> 
+            (${((jlsBytes.length / bytes.length) * 100).toFixed(1)}%)
+          `;
+
+          const blob = new Blob([jlsBytes], { type: "application/octet-stream" });
+          const url = URL.createObjectURL(blob);
+          const link = document.getElementById("downloadJls");
+          link.href = url;
+          link.download = file.name.replace(/\.[^/.]+$/, "") + ".jls";
+          link.classList.remove("hidden");
+
+          document.getElementById("downloadPng").href = tempCanvas.toDataURL("image/png");
+          document.getElementById("downloadPng").download = "original.png";
+          document.getElementById("downloadJpg").href = tempCanvas.toDataURL("image/jpeg", 0.95);
+          document.getElementById("downloadJpg").download = "original.jpg";
+        }
+
+        drawCanvas(rawData, width, height, components, bits);
+
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        document.getElementById("processing").classList.add("hidden");
+        document.getElementById("result").classList.remove("hidden");
+
+      } catch (err) {
+        document.getElementById("processing").classList.add("hidden");
+        document.getElementById("errorMsg").textContent = "Error: " + err.message;
+        document.getElementById("errorMsg").classList.remove("hidden");
+      }
+    }
+
+    // Drag & Drop + Click
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        processFile(e.target.files[0]);
+      }
+    });
+
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.add("border-purple-500", "bg-purple-900/20");
+    });
+
+    dropZone.addEventListener("dragenter", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.add("border-purple-500", "bg-purple-900/20");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("border-purple-500", "bg-purple-900/20");
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.remove("border-purple-500", "bg-purple-900/20");
+
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        fileInput.files = e.dataTransfer.files;
+        fileInput.dispatchEvent(new Event("change"));
+      }
+    });
+
+    document.getElementById("anotherFile").addEventListener("click", resetToWelcome);
+
+    await init();
+  </script>
+</body>
+</html>

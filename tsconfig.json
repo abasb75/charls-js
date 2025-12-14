@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es2020",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "declaration": true,
+    "outDir": "package",
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src","dist"]
+}

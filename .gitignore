@@ -3,3 +3,5 @@ test/fixtures/artificial*
 build/*
 build/
 build-native/*
+node_modules/
+
