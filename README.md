@@ -4,6 +4,13 @@ A JavaScript/TypeScript package built on top of the CharLS reference implementat
 
 Perfect for web applications that need lossless or near-lossless image compression (e.g., DICOM viewers, medical imaging tools, or any project dealing with high-fidelity image data).
 
+<p>
+  <a href="https://abasb75.github.io/charls-js/" target="_blank">
+    CharLS JavaScript implementation
+  </a>
+</p>
+
+
 Installation
 Bash
 
