@@ -1,10 +1,14 @@
 {
     "name": "@abasb75/charls",
-    "version": "2.4.2-p8",
-    "description": "charls for js",
+    "version": "2.4.2-p10",
+    "description": "charls for js (jls file codec)",
     "directories": {
         "test": "test"
     },
+    "keywords": [
+        "JLS",
+        "charls"
+    ],
     "type": "module",
     "exports": {
         "./encode": "./dist/jls_es6_encoder.js",

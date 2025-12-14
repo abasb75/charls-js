@@ -1,12 +1,15 @@
 # @abasb75/charls
 
-A JavaScript/TypeScript package built on top of the CharLS reference implementation, providing full client-side JPEG-LS encoding and decoding capabilities using WebAssembly.
+A JavaScript/TypeScript package built on top of the CharLS reference implementation, providing full client-side JPEG-LS encoding and decoding capabilities using WebAssembly (charls 2.4.2).
 
 Perfect for web applications that need lossless or near-lossless image compression (e.g., DICOM viewers, medical imaging tools, or any project dealing with high-fidelity image data).
 
+
+## Demo
+
 <p>
   <a href="https://abasb75.github.io/charls-js/" target="_blank">
-    CharLS JavaScript implementation
+    JLS Converter — Lossless Compression Tool
   </a>
 </p>
 
