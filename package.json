@@ -1,6 +1,6 @@
 {
     "name": "@abasb75/charls",
-    "version": "2.4.2-p10",
+    "version": "2.4.2-p12",
     "description": "charls for js (jls file codec)",
     "directories": {
         "test": "test"
@@ -9,10 +9,15 @@
         "JLS",
         "charls"
     ],
-    "type": "module",
     "exports": {
-        "./encode": "./dist/jls_es6_encoder.js",
-        "./decode": "./dist/jls_es6_decoder.js",
+         "./decode": {
+            "require": "./dist/jls_inline_decoder.js",
+            "import": "./dist/jls_es6_decoder.js"
+        },
+        "./encode": {
+            "require": "./dist/jls_inline_encoder.js",
+            "import": "./dist/jls_es6_encoder.js"
+        },
         "./*": "./dist/*"
     },
     "files": [

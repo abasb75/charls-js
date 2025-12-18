@@ -1,5 +1,5 @@
 // @ts-ignore
-import CharLSEncoder from '../dist/jls_encoder.js';
+import CharLSEncoder from './jls_encoder.js';
 
 export interface EncodedJPEGLS {
     data:Uint8Array;
@@ -20,12 +20,7 @@ async function decode(
 ):Promise<EncodedJPEGLS> {
 
     if(!charls){
-        charls = await CharLSEncoder({
-            locateFile: (path:any) => {
-                console.log({path});
-                return new URL(`../dist/${path}`, import.meta.url).href;
-            }
-        });
+        charls = await CharLSEncoder();
         encodeImage = charls.encode;
     }
 

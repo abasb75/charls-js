@@ -21,21 +21,12 @@ emcmake cmake .. -DCMAKE_BUILD_TYPE=Release
 emmake make -j$(nproc)
 
 cd ..
-mv build/jls_decoder.js dist/jls_decoder.js
-mv build/jls_decoder.wasm dist/jls_decoder.wasm
+mv build/*.js dist/
+mv build/*.wasm dist/
+mv build/*.d.ts dist/
 
-mv build/jls_encoder.js dist/jls_encoder.js
-mv build/jls_encoder.wasm dist/jls_encoder.wasm
-
-mv build/jls_es6_decoder.js dist/jls_es6_decoder.js
-mv build/jls_es6_decoder.wasm dist/jls_es6_decoder.wasm
-
-mv build/jls_es6_encoder.js dist/jls_es6_encoder.js
-mv build/jls_es6_encoder.wasm dist/jls_es6_encoder.wasm
-
-
-mv build/jls_inline_decoder.js dist/jls_inline_decoder.js 
-mv build/jls_inline_encoder.js dist/jls_inline_encoder.js
+cp src/tshelper/*.ts dist
+cp src/tshelper/*.cts dist
 
 echo "Build complete! Files in dist/"
 ls dist/

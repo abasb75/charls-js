@@ -1,5 +1,4 @@
-// @ts-ignore
-import CharLSDecoder from '../dist/jls_decoder.js';
+import CharLSDecoder from './jls_es6_decoder.js';
 
 export interface DecodedJPEGLS {
     data: Uint8Array;
@@ -12,19 +11,17 @@ export interface DecodedJPEGLS {
 }
 
 export interface DecodeOptions{
-
+    
 }
 
 var charls:any;
 
 async function decode(imageData:Uint8Array):Promise<DecodedJPEGLS>{
 
-
     if(!charls){
         charls = await CharLSDecoder({
             locateFile: (path:any) => {
-                console.log({path});
-                return new URL(`../dist/${path}`, import.meta.url).href;
+                return new URL(`./${path}`, import.meta.url).href;
             }
         });
     }
